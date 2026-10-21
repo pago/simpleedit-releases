@@ -1,0 +1,204 @@
+# SimpleEdit
+
+**An Agentic Development Environment for engineers who run Claude Code or Codex.**
+
+SimpleEdit is built around a simple observation: when you run AI agents across multiple worktrees in parallel, your job changes. You're no longer writing code line by line — you're directing agents, reviewing their output, and deciding what ships. SimpleEdit is designed for exactly that workflow.
+
+> **Alpha software.** Expect rough edges, missing features, and occasional bugs. Feedback is very welcome: see [Feedback and bug reports](#feedback-and-bug-reports).
+
+---
+
+## What makes it different
+
+Most development tools are built around the act of writing code. SimpleEdit is built around the act of *reviewing* code that agents have written.
+
+- **Diff-first UI** — commit review and staged change inspection are first-class, not buried in a menu
+- **Multi-worktree by design** — run separate agents on separate branches simultaneously, with independent editor state per pane
+- **Live agent awareness** — see which files an agent has touched, and what it's currently doing, without leaving your review flow
+- **Contextual agent interaction** — send questions about a specific commit or diff directly to a Claude or Codex terminal, with context pre-filled
+- **Embedded terminals** — keep each provider's native terminal UI in a named session tab
+
+The file tree sits on the right. The editor is the primary focus. All splits are resizable.
+
+---
+
+## Built for interactive agents + worktrees
+
+SimpleEdit works best with a bare git repository and git worktrees — one worktree per agent session. It will clone any repo into that structure automatically, or you can open an existing bare repo.
+
+```
+myproject.git/          ← bare repo
+myproject-main/         ← main worktree
+myproject-feature-a/    ← agent working here
+myproject-feature-b/    ← another agent, another branch
+```
+
+Each pane in SimpleEdit tracks its own worktree independently. You can review a diff in one pane while an agent is still running in the other.
+
+---
+
+## Status
+
+SimpleEdit is alpha quality software. It works well for the core workflow, but you will encounter:
+
+- Missing keyboard shortcuts
+- UI rough edges
+- Occasional crashes or rendering glitches
+- Features that are present but incomplete
+
+We're using SimpleEdit to build SimpleEdit, which helps us find and fix the sharpest edges quickly.
+
+---
+
+## Installing
+
+SimpleEdit does not install or authenticate an agent CLI for you. Install and sign in to at least one provider first:
+
+```bash
+# Claude Code
+claude
+
+# Codex
+codex login
+```
+
+Codex sessions use the native Codex TUI and your existing sandbox, approval, profile, MCP, and authentication defaults. SimpleEdit adds its MCP bridge and lifecycle reporter only for that session. On first use, Codex may show that the reporter hooks need review; run `/hooks` in the embedded terminal and trust the SimpleEdit hook definition. Until then the session still works, but SimpleEdit labels status and worktree reporting as degraded and derives only basic running/exited state from the PTY.
+
+Automated Review, Tour, Screen PRs, deep-review lenses, and synthesis can target Codex too. These bounded runs always use `codex exec --ephemeral` with a read-only sandbox and approvals disabled.
+
+### macOS — Homebrew (recommended)
+
+```bash
+brew trust pago/simpleedit
+brew install --cask pago/simpleedit/simpleedit
+```
+
+Then, to update:
+
+```bash
+brew upgrade --cask simpleedit
+```
+
+The cask clears the download quarantine flag for you, so there is no Gatekeeper
+detour — SimpleEdit launches straight away.
+
+Both lines matter. Homebrew 6 refuses to load casks from non-official taps
+unless you either trust the tap or name it in full on the command line, so
+without `brew trust` a plain `brew upgrade` **silently skips SimpleEdit** rather
+than updating it. You only ever run it once.
+
+### macOS — manual download
+
+Grab the latest `.dmg` from the [Releases page](https://github.com/pago/simpleedit-releases/releases).
+
+SimpleEdit is ad-hoc signed but not notarized by Apple, so a downloaded copy
+needs a one-time approval:
+
+1. Open the `.dmg` and drag **SimpleEdit** to Applications.
+2. Double-click SimpleEdit. macOS will refuse to open it the first time.
+3. Go to **System Settings → Privacy & Security**, scroll to the note about SimpleEdit being blocked, and click **Open Anyway**.
+
+Alternatively, clear the download quarantine flag from a terminal and launch normally:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/SimpleEdit.app
+```
+
+> If you see **"SimpleEdit is damaged and can't be opened"** on an older build, it predates ad-hoc signing — download the latest release, or run the `xattr` command above.
+
+Because Apple notarization is what Squirrel's signature check wants, a manually
+installed copy can download an update but not install it. The in-app updater
+therefore only offers a restart on Windows and Linux; on macOS, prefer Homebrew.
+
+### Updating a Homebrew install
+
+A Homebrew copy updates itself: the banner offers **Update & Restart**, which
+quits SimpleEdit, runs the upgrade, and reopens it. If it fails, the next launch
+says so and offers the log.
+
+If you would rather run it by hand, use a terminal **other than SimpleEdit**.
+`brew upgrade` replaces the app bundle, and run from inside SimpleEdit the
+upgrade is a child of the app being replaced — quitting the app would kill the
+upgrade partway through. The **Update & Restart** button exists precisely because
+it sidesteps that.
+
+### Windows / Linux
+
+Grab the `.exe` (Windows) or `.AppImage` / `.deb` (Linux) from the
+[Releases page](https://github.com/pago/simpleedit-releases/releases). These builds
+self-update in place — the banner's **Restart & Update** button works.
+
+---
+
+## Language server support
+
+SimpleEdit provides LSP-powered diagnostics, hover info, and go-to-definition for several languages. Each language server is resolved from your project's `node_modules/.bin` first, then your system PATH — so you can install them locally per project or globally.
+
+### TypeScript / JavaScript
+
+```bash
+# local (recommended — picks up project's own TypeScript)
+npm install --save-dev typescript typescript-language-server
+
+# global
+npm install -g typescript typescript-language-server
+```
+
+Both `typescript` and `typescript-language-server` are needed. SimpleEdit automatically passes the project's local `tsserver.js` path to the language server so it uses the same TypeScript version as your build.
+
+### CSS / SCSS / Less
+
+```bash
+# local
+npm install --save-dev vscode-langservers-extracted
+
+# global
+npm install -g vscode-langservers-extracted
+```
+
+### JSON
+
+Included in `vscode-langservers-extracted` (see CSS above).
+
+### Rust
+
+Install `rust-analyzer` via rustup or your system package manager:
+
+```bash
+rustup component add rust-analyzer
+# or: brew install rust-analyzer
+```
+
+### Python
+
+```bash
+pip install python-lsp-server
+# or: pipx install python-lsp-server
+```
+
+### Go
+
+```bash
+go install golang.org/x/tools/gopls@latest
+```
+
+---
+
+## Feedback and bug reports
+
+Please use this repository's [issues](https://github.com/pago/simpleedit-releases/issues/new/choose):
+
+- **Bug report**: something doesn't work as described, or crashes.
+- **Feature request**: something you'd like SimpleEdit to do.
+
+Issues here are for people using SimpleEdit. The roadmap and day-to-day planning
+are kept elsewhere, so a request may be closed with a note on where it stands
+rather than tracked here.
+
+---
+
+## About this repository
+
+This repository publishes SimpleEdit's releases (installers, update metadata and
+release notes) and collects feedback. The source code is developed in a private
+repository.

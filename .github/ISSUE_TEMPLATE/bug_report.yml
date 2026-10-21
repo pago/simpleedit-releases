@@ -1,0 +1,53 @@
+name: Bug report
+description: Something doesn't work as described, or crashes.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. …
+        2. …
+  - type: input
+    id: version
+    attributes:
+      label: SimpleEdit version
+      description: Shown in the app's About window, or in the release you installed.
+      placeholder: e.g. 0.25.0
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did you install it?
+      options:
+        - Homebrew (macOS)
+        - Downloaded .dmg (macOS)
+        - Windows installer
+        - AppImage / .deb (Linux)
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS and version
+      placeholder: e.g. macOS 26.1 (Apple silicon)
+  - type: input
+    id: agent
+    attributes:
+      label: Agent CLI and version
+      description: Which agent the problem involves, if any.
+      placeholder: e.g. Claude Code 2.1.306, Codex 0.50
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Anything that helps. Please remove tokens, paths or other private details first.
