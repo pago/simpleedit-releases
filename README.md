@@ -125,8 +125,8 @@ xattr -dr com.apple.quarantine /Applications/SimpleEdit.app
 > If you see **"SimpleEdit is damaged and can't be opened"** on an older build, it predates ad-hoc signing — download the latest release, or run the `xattr` command above.
 
 Because Apple notarization is what Squirrel's signature check wants, a manually
-installed copy can download an update but not install it. Prefer Homebrew, which
-updates in place.
+installed copy can download an update but not install it. The in-app updater
+therefore only offers a restart on Windows and Linux; on macOS, prefer Homebrew.
 
 ### Updating a Homebrew install
 
@@ -142,7 +142,9 @@ it sidesteps that.
 
 ### Windows / Linux
 
-SimpleEdit is macOS only for now. There are no Windows or Linux builds.
+Grab the `.exe` (Windows) or `.AppImage` / `.deb` (Linux) from the
+[Releases page](https://github.com/pago/simpleedit-releases/releases). These builds
+self-update in place — the banner's **Restart & Update** button works.
 
 ---
 
