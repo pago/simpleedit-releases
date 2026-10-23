@@ -32,6 +32,7 @@ Running many agents in parallel is now normal. Every editor can do it. The hard 
 - **Backlog.** Sessions you've prepared but can't start yet, because they would collide with work that is running. Your agents add to it too: a running session can park a follow-up there and stay on its task. When the coast is clear, start the item and it opens as a session with the prompt, provider and model you prepared.
 - **Phone companion.** Sessions, backlog, Screen PRs and the full Review Room on your phone, over Tailscale or OpenTunnel, with push notifications.
 - **Providers and models.** Claude Code, Codex and OpenCode, plus local models through Ollama. Pick the model per session. A pill shows the tokens each session used.
+- **Your agent can drive it.** Every session gets SimpleEdit's tools. Ask your agent to show you a diff, start or park a session, message another agent, ask you for a review or run a workflow.
 - **A real editor.** Monaco (the editor of VS Code) with language servers for TypeScript, CSS, JSON, Rust, Python and Go.
 
 ## Guides
@@ -42,6 +43,7 @@ Short guides for the main workflows are on [simpleedit.org](https://simpleedit.o
 - [Reviewing plans with SimpleEdit](https://simpleedit.org/guides/reviewing-plans/)
 - [Reviewing a PR stack](https://simpleedit.org/guides/reviewing-a-pr-stack/)
 - [Running a Workflow](https://simpleedit.org/guides/running-a-workflow/)
+- [Driving SimpleEdit from your agent](https://simpleedit.org/guides/driving-simpleedit-from-your-agent/)
 
 ---
 
