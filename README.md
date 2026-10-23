@@ -1,10 +1,10 @@
 # SimpleEdit
 
-**When anyone can run ten agents, the scarce thing is a human who understands what ships.**
+**An Agentic Development Environment for desktop and mobile.** Run your agents, understand what they wrote, decide what ships.
 
-SimpleEdit is a desktop app for one engineer who works with coding agents. Your agents write the code. SimpleEdit helps you understand it and decide what ships.
+When anyone can run ten agents, the scarce thing is a human who understands what ships.
 
-It runs Claude Code, Codex and OpenCode in their own terminals and covers the whole path from idea to merge. Use Threads to shape a plan with your agent, Workflows to run dozens of agents that implement it, and the Review Room to understand what changed before it ships.
+It runs Claude Code, Codex and OpenCode in their own terminals. Use Threads to shape a plan with your agent, Workflows to run dozens of agents that implement it, and the Review Room to understand what changed before it ships.
 
 > **Alpha software.** Expect rough edges, missing features and occasional bugs. Feedback is very welcome: see [Feedback and bug reports](#feedback-and-bug-reports).
 
@@ -14,11 +14,11 @@ It runs Claude Code, Codex and OpenCode in their own terminals and covers the wh
 
 Running many agents in parallel is now normal. Every editor can do it. The hard part has moved: someone must read what the agents wrote, understand it, and stand behind it. Most tools answer with more bots that post comments and approve PRs. SimpleEdit does the opposite.
 
-- **You decide, the AI helps you read.** The AI writes an overview, suggests a reading order and answers your questions. It never posts, approves or merges. Nothing goes to GitHub that you did not write or accept.
+- **Two agents per change: one builds, one explains.** One agent writes the change. A separate, read-only agent that didn't write it helps you understand it: an overview, a reading order, answers to your questions. It never posts, approves or merges. Nothing goes to GitHub that you did not write or accept.
 - **A stack is one review.** A chain of dependent PRs opens as one review, layer by layer.
 - **Talk to the agent where the code is.** Comment on a line in the editor, in a diff or in a rendered plan doc. The agent answers in that thread.
 - **Native agents, not a wrapper.** Each agent runs in its own unmodified terminal UI. You keep your login, your subscription, your settings, your MCP servers and your slash commands.
-- **Built for one engineer.** One person directs many sessions, at the desk or from a phone. Your review goes out through GitHub.
+- **Fits your team as it is.** Review a colleague's PR or stack with the same overview, reading order and companion you use for your agents' work. Your review goes out through GitHub, in your name. Nobody else needs to install anything.
 
 ---
 
@@ -28,10 +28,10 @@ Running many agents in parallel is now normal. Every editor can do it. The hard 
 - **Threads.** Line-anchored conversations with a session's agent. They work in the editor, in the diff, in the rendered markdown view and on the phone. The agent answers when it is idle, so you never type into a running turn.
 - **Screen PRs.** Triage your review queue into "Needs your attention", "Quick pass" and "Waiting on author". Get an overview per PR, run a deep review when you ask for it, write your review in the composer, and screen the queue on a schedule. "Continue reviewing" keeps every review you started.
 - **Review Room.** One room per PR stack or local branch. It has an overview, a reading order, a commit picker and Viewed marks. Findings, other reviewers' comments and your notes all become threads. A read-only companion agent answers your questions. You submit one review per layer, written by you.
-- **Workflows.** A lead agent turns a plan into a task graph, and SimpleEdit runs it with hidden worker sessions. You see the graph live, and by default you press Start yourself. Review gates stop the run until you pass them in the Review Room.
-- **Backlog.** Ideas per project that you or your agents add. Each one starts as a session when you choose.
+- **Workflows.** Large projects without context bloat. A lead agent turns your plan into a task graph that hidden workers carry out, each in a fresh context. The lead wakes only for decisions, so it keeps the project view. When a worker fails or the plan missed a decision, you and the lead fix the plan, patch the running graph, and the run continues. Review gates stop it until you pass them in the Review Room.
+- **Backlog.** Sessions you've prepared but can't start yet, because they would collide with work that is running. Your agents add to it too: a running session can park a follow-up there and stay on its task. When the coast is clear, start the item and it opens as a session with the prompt, provider and model you prepared.
 - **Phone companion.** Sessions, backlog, Screen PRs and the full Review Room on your phone, over Tailscale or OpenTunnel, with push notifications.
-- **Providers and models.** Claude Code, Codex and OpenCode, plus local models through Ollama. Pick the model and effort per session. A pill shows the tokens each session used.
+- **Providers and models.** Claude Code, Codex and OpenCode, plus local models through Ollama. Pick the model per session. A pill shows the tokens each session used.
 - **A real editor.** Monaco (the editor of VS Code) with language servers for TypeScript, CSS, JSON, Rust, Python and Go.
 
 ## Guides
