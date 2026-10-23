@@ -1,52 +1,62 @@
 # SimpleEdit
 
-**An Agentic Development Environment for engineers who run Claude Code or Codex.**
+**When anyone can run ten agents, the scarce thing is a human who understands what ships.**
 
-SimpleEdit is built around a simple observation: when you run AI agents across multiple worktrees in parallel, your job changes. You're no longer writing code line by line — you're directing agents, reviewing their output, and deciding what ships. SimpleEdit is designed for exactly that workflow.
+SimpleEdit is a desktop app for one engineer who works with coding agents. Your agents write the code. SimpleEdit helps you understand it and decide what ships.
 
-> **Alpha software.** Expect rough edges, missing features, and occasional bugs. Feedback is very welcome: see [Feedback and bug reports](#feedback-and-bug-reports).
+It runs Claude Code, Codex and OpenCode in their own terminals and covers the whole path from idea to merge. Use Threads to shape a plan with your agent, Workflows to run dozens of agents that implement it, and the Review Room to understand what changed before it ships.
 
----
-
-## What makes it different
-
-Most development tools are built around the act of writing code. SimpleEdit is built around the act of *reviewing* code that agents have written.
-
-- **Diff-first UI** — commit review and staged change inspection are first-class, not buried in a menu
-- **Multi-worktree by design** — run separate agents on separate branches simultaneously, with independent editor state per pane
-- **Live agent awareness** — see which files an agent has touched, and what it's currently doing, without leaving your review flow
-- **Contextual agent interaction** — send questions about a specific commit or diff directly to a Claude or Codex terminal, with context pre-filled
-- **Embedded terminals** — keep each provider's native terminal UI in a named session tab
-
-The file tree sits on the right. The editor is the primary focus. All splits are resizable.
+> **Alpha software.** Expect rough edges, missing features and occasional bugs. Feedback is very welcome: see [Feedback and bug reports](#feedback-and-bug-reports).
 
 ---
 
-## Built for interactive agents + worktrees
+## Why SimpleEdit
 
-SimpleEdit works best with a bare git repository and git worktrees — one worktree per agent session. It will clone any repo into that structure automatically, or you can open an existing bare repo.
+Running many agents in parallel is now normal. Every editor can do it. The hard part has moved: someone must read what the agents wrote, understand it, and stand behind it. Most tools answer with more bots that post comments and approve PRs. SimpleEdit does the opposite.
+
+- **You decide, the AI helps you read.** The AI writes an overview, suggests a reading order and answers your questions. It never posts, approves or merges. Nothing goes to GitHub that you did not write or accept.
+- **A stack is one review.** A chain of dependent PRs opens as one review, layer by layer.
+- **Talk to the agent where the code is.** Comment on a line in the editor, in a diff or in a rendered plan doc. The agent answers in that thread.
+- **Native agents, not a wrapper.** Each agent runs in its own unmodified terminal UI. You keep your login, your subscription, your settings, your MCP servers and your slash commands.
+- **Built for one engineer.** One person directs many sessions, at the desk or from a phone. Your review goes out through GitHub.
+
+---
+
+## Features
+
+- **Sessions.** Durable agent sessions. Each one has its own editor, diff and git log. Group sessions, fork one, hand one off to a fresh context, or resume it after a restart.
+- **Threads.** Line-anchored conversations with a session's agent. They work in the editor, in the diff, in the rendered markdown view and on the phone. The agent answers when it is idle, so you never type into a running turn.
+- **Screen PRs.** Triage your review queue into "Needs your attention", "Quick pass" and "Waiting on author". Get an overview per PR, run a deep review when you ask for it, write your review in the composer, and screen the queue on a schedule. "Continue reviewing" keeps every review you started.
+- **Review Room.** One room per PR stack or local branch. It has an overview, a reading order, a commit picker and Viewed marks. Findings, other reviewers' comments and your notes all become threads. A read-only companion agent answers your questions. You submit one review per layer, written by you.
+- **Workflows.** A lead agent turns a plan into a task graph, and SimpleEdit runs it with hidden worker sessions. You see the graph live, and by default you press Start yourself. Review gates stop the run until you pass them in the Review Room.
+- **Backlog.** Ideas per project that you or your agents add. Each one starts as a session when you choose.
+- **Phone companion.** Sessions, backlog, Screen PRs and the full Review Room on your phone, over Tailscale or OpenTunnel, with push notifications.
+- **Providers and models.** Claude Code, Codex and OpenCode, plus local models through Ollama. Pick the model and effort per session. A pill shows the tokens each session used.
+- **A real editor.** Monaco (the editor of VS Code) with language servers for TypeScript, CSS, JSON, Rust, Python and Go.
+
+## Guides
+
+Short guides for the main workflows are on [simpleedit.org](https://simpleedit.org/#guides):
+
+- [Getting started](https://simpleedit.org/guides/getting-started/)
+- [Reviewing plans with SimpleEdit](https://simpleedit.org/guides/reviewing-plans/)
+- [Reviewing a PR stack](https://simpleedit.org/guides/reviewing-a-pr-stack/)
+- [Running a Workflow](https://simpleedit.org/guides/running-a-workflow/)
+
+---
+
+## Worktrees
+
+SimpleEdit works best with a bare git repository and one worktree per topic. It can clone a repo into that layout for you, or you can open an existing bare repo.
 
 ```
 myproject.git/          ← bare repo
 myproject-main/         ← main worktree
-myproject-feature-a/    ← agent working here
+myproject-feature-a/    ← one agent works here
 myproject-feature-b/    ← another agent, another branch
 ```
 
-Each pane in SimpleEdit tracks its own worktree independently. You can review a diff in one pane while an agent is still running in the other.
-
----
-
-## Status
-
-SimpleEdit is alpha quality software. It works well for the core workflow, but you will encounter:
-
-- Missing keyboard shortcuts
-- UI rough edges
-- Occasional crashes or rendering glitches
-- Features that are present but incomplete
-
-We're using SimpleEdit to build SimpleEdit, which helps us find and fix the sharpest edges quickly.
+Each session tracks its own worktree. You can review a diff in one session while an agent still works in another.
 
 ---
 
@@ -60,11 +70,14 @@ claude
 
 # Codex
 codex login
+
+# OpenCode
+opencode providers login
 ```
 
 Codex sessions use the native Codex TUI and your existing sandbox, approval, profile, MCP, and authentication defaults. SimpleEdit adds its MCP bridge and lifecycle reporter only for that session. On first use, Codex may show that the reporter hooks need review; run `/hooks` in the embedded terminal and trust the SimpleEdit hook definition. Until then the session still works, but SimpleEdit labels status and worktree reporting as degraded and derives only basic running/exited state from the PTY.
 
-Automated Review, Tour, Screen PRs, deep-review lenses, and synthesis can target Codex too. These bounded runs always use `codex exec --ephemeral` with a read-only sandbox and approvals disabled.
+Screen PRs triage, PR overviews, deep-review lenses and synthesis can run on Codex too. These bounded runs always use `codex exec --ephemeral` with a read-only sandbox and approvals disabled.
 
 ### macOS — Homebrew (recommended)
 
